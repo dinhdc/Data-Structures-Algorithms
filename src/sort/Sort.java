@@ -82,6 +82,70 @@ public class Sort {
         }
     }
 
+    public void quickSort(int[] nums, int start, int end){
+        // O(nlogn)
+        // unstatble
+        if(end - start < 2){
+            return;
+        }
+        int pivotIndex = partition(nums, start, end);
+        quickSort(nums, start, pivotIndex);
+        quickSort(nums, pivotIndex+1, end);
+    }
+
+    private int partition(int[] nums, int start, int end){
+
+        int pivot = nums[start];
+        int i = start;
+        int j = end;
+        while(i<j){
+            // empty loop
+            while(i < j && nums[--j] >= pivot);
+            if(i < j){
+                nums[i] = nums[j];
+            }
+
+            while(i< j && nums[++i] <= pivot);
+            if(i < j){
+                nums[j] = nums[i];
+            }
+        }
+        nums[j] = pivot;
+        return j;
+    }
+
+    public void countingSort(int[] nums, int min, int max){
+        int[] countArray = new int[(max-min) + 1];
+        for(int i=0; i<nums.length;i++){
+            countArray[nums[i] - min]++;
+        }
+        int j = 0;
+        for(int i=min; i <= max; i++){
+            while(countArray[i-min]>0){
+                nums[j++] = i;
+                countArray[i-min]--;
+            }
+        }
+    }
+
+    public void radixSort(int[] nums, int radix, int width){
+        for (int i=0; i<width;i++){
+            radixSingleSort(nums, i, radix);
+        }
+    }
+
+    private void radixSingleSort(int[] nums, int position, int radix) {
+        int numItems = nums.length;
+        int[] countArray = new int[radix];
+        for(int value: nums){
+            countArray[getDigit(position, value, radix)]++;
+        }
+    }
+
+    private int getDigit(int position, int value, int radix) {
+        return value / (int) Math.pow(10, position) % radix;
+    }
+
     private void swap(int[] nums, int i, int j){
         if(i==j) return;
         int temp = nums[i];
